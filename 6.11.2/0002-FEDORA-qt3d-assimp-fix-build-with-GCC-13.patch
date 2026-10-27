@@ -1,0 +1,56 @@
+From 32bf7f3961a1e0c3ecef4a408bcb120e284840c8 Mon Sep 17 00:00:00 2001
+From: Ruikai Liu <rickliu2000@outlook.com>
+Date: Thu, 6 Nov 2025 14:27:19 +0800
+Subject: [PATCH 2/6] FEDORA: qt3d: assimp: fix build with GCC >= 13
+
+Link: https://src.fedoraproject.org/rpms/qt6-qt3d/blob/072094f3e7e698321b92eafcb297111ba42eed15/f/qt3d-assimp-fix-build.patch
+---
+ .../assimp/src/code/AssetLib/FBX/FBXBinaryTokenizer.cpp        | 2 ++
+ qt3d/src/3rdparty/assimp/src/code/Common/Importer.h            | 3 +++
+ qt3d/src/3rdparty/assimp/src/include/assimp/Importer.hpp       | 3 +++
+ 3 files changed, 8 insertions(+)
+
+diff --git a/qt3d/src/3rdparty/assimp/src/code/AssetLib/FBX/FBXBinaryTokenizer.cpp b/qt3d/src/3rdparty/assimp/src/code/AssetLib/FBX/FBXBinaryTokenizer.cpp
+index be4ed7fac0..f53e8b7620 100644
+--- a/qt3d/src/3rdparty/assimp/src/code/AssetLib/FBX/FBXBinaryTokenizer.cpp
++++ b/qt3d/src/3rdparty/assimp/src/code/AssetLib/FBX/FBXBinaryTokenizer.cpp
+@@ -56,6 +56,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #include <assimp/DefaultLogger.hpp>
+ #include <assimp/StringUtils.h>
+ 
++#include <cstdint>
++
+ namespace Assimp {
+ namespace FBX {
+ 
+diff --git a/qt3d/src/3rdparty/assimp/src/code/Common/Importer.h b/qt3d/src/3rdparty/assimp/src/code/Common/Importer.h
+index 5d39776478..09127894b3 100644
+--- a/qt3d/src/3rdparty/assimp/src/code/Common/Importer.h
++++ b/qt3d/src/3rdparty/assimp/src/code/Common/Importer.h
+@@ -50,6 +50,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #include <string>
+ #include <assimp/matrix4x4.h>
+ 
++#include <exception>
++#include <stdexcept>
++
+ struct aiScene;
+ 
+ namespace Assimp {
+diff --git a/qt3d/src/3rdparty/assimp/src/include/assimp/Importer.hpp b/qt3d/src/3rdparty/assimp/src/include/assimp/Importer.hpp
+index d7bc9de124..84d4cf879c 100644
+--- a/qt3d/src/3rdparty/assimp/src/include/assimp/Importer.hpp
++++ b/qt3d/src/3rdparty/assimp/src/include/assimp/Importer.hpp
+@@ -59,6 +59,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+ #include <exception>
+ 
++#include <exception>
++#include <stdexcept>
++
+ namespace Assimp {
+ // =======================================================================
+ // Public interface to Assimp
+-- 
+2.55.0
+

@@ -1,0 +1,44 @@
+From b4027b867bdff1a964fef36ecc317e4aa6ac1bb8 Mon Sep 17 00:00:00 2001
+From: Henry Chen <henry.chen@oss.cipunited.com>
+Date: Tue, 11 Nov 2025 13:28:35 +0800
+Subject: [PATCH 5/6] AOSCOS: qtdeclarative: fallback to QThreadStorage for
+ loongson3
+
+---
+ qtdeclarative/src/quick/util/qquickprofiler_p.h | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/qtdeclarative/src/quick/util/qquickprofiler_p.h b/qtdeclarative/src/quick/util/qquickprofiler_p.h
+index fcfd6d432e..1fe81a5832 100644
+--- a/qtdeclarative/src/quick/util/qquickprofiler_p.h
++++ b/qtdeclarative/src/quick/util/qquickprofiler_p.h
+@@ -123,7 +123,12 @@ private:
+         qint64 values[size][s_numSceneGraphTimings + 1];
+     };
+ 
+-    static inline thread_local TimingData<NumRenderThreadFrameTypes> renderThreadTimings;
++#ifdef __mips__
++    QThreadStorage<TimingData<NumRenderThreadFrameTypes>>
++#else
++    static inline thread_local TimingData<NumRenderThreadFrameTypes>
++#endif
++    renderThreadTimings;
+     TimingData<NumGUIThreadFrameTypes> guiThreadTimings;
+ 
+ public:
+@@ -131,7 +136,11 @@ public:
+     qint64 *timings()
+     {
+         if constexpr (type < NumRenderThreadFrameTypes)
+-            return renderThreadTimings.values[type];
++            return renderThreadTimings.
++#ifdef __mips__
++              localData().
++#endif
++              values[type];
+         else
+             return guiThreadTimings.values[type - NumRenderThreadFrameTypes];
+     }
+-- 
+2.55.0
+
